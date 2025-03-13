@@ -17,13 +17,13 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex justify-center mb-6">
       <input
         type="text"
         value={query}
         onChange={handleChange}
         placeholder="Search for a recipe..."
-        className="search-bar-input"
+        className="border border-gray-300 rounded-md p-2 w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </form>
   );
