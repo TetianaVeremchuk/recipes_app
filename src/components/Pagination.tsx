@@ -1,44 +1,30 @@
-type PaginationProps = {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-};
-
-const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
-  const generatePageNumbers = () => {
-    if (totalPages <= 10) {
-      return [...Array(totalPages).keys()].map((n) => n + 1);
-    }
-
-    if (currentPage <= 5) {
-      return [1, 2, 3, 4, 5, 6, 7, '...', totalPages];
-    }
-
-    if (currentPage >= totalPages - 4) {
-      return [1, '...', totalPages - 6, totalPages - 5, totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    }
-
-    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
-  };
-
+const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: number, totalPages: number, onPageChange: (page: number) => void }) => {
   return (
-    <div className="pagination">
-      <button disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
-        {'<'}
+    <div className="flex justify-center space-x-2">
+      <button 
+        className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        ‹
       </button>
 
-      {generatePageNumbers().map((page, index) => (
-        <button
-          key={index}
-          disabled={page === '...' || page === currentPage}
-          onClick={() => typeof page === 'number' && onPageChange(page)}
+      {[...Array(totalPages)].map((_, i) => (
+        <button 
+          key={i}
+          className={`px-3 py-1 rounded-md ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+          onClick={() => onPageChange(i + 1)}
         >
-          {page}
+          {i + 1}
         </button>
       ))}
 
-      <button disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>
-        {'>'}
+      <button 
+        className={`px-3 py-1 rounded-md ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        ›
       </button>
     </div>
   );

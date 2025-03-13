@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { Recipe } from '../services/api';
 
 type SelectedRecipesContextType = {
@@ -8,14 +8,14 @@ type SelectedRecipesContextType = {
 
 const SelectedRecipesContext = createContext<SelectedRecipesContextType | undefined>(undefined);
 
-export const SelectedRecipesProvider = ({ children }: { children: ReactNode }) => {
+export const SelectedRecipesProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedRecipes, setSelectedRecipes] = useState<Recipe[]>([]);
 
   const toggleRecipe = (recipe: Recipe) => {
-    setSelectedRecipes((prev) =>
-      prev.find((r) => r.idMeal === recipe.idMeal)
-        ? prev.filter((r) => r.idMeal !== recipe.idMeal)
-        : [...prev, recipe]
+    setSelectedRecipes((prevSelected) =>
+      prevSelected.some((r) => r.idMeal === recipe.idMeal)
+        ? prevSelected.filter((r) => r.idMeal !== recipe.idMeal)
+        : [...prevSelected, recipe] 
     );
   };
 
@@ -28,6 +28,6 @@ export const SelectedRecipesProvider = ({ children }: { children: ReactNode }) =
 
 export const useSelectedRecipes = () => {
   const context = useContext(SelectedRecipesContext);
-  if (!context) throw new Error('useSelectedRecipes must be used within a SelectedRecipesProvider');
+  if (!context) throw new Error("useSelectedRecipes must be used within a SelectedRecipesProvider");
   return context;
 };

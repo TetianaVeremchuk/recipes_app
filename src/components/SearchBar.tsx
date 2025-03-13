@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 
 type SearchBarProps = {
@@ -8,25 +8,29 @@ type SearchBarProps = {
 const SearchBar = ({ onSearch }: SearchBarProps) => {
   const [query, setQuery] = useState('');
 
-  const debouncedSearch = useCallback(
-    debounce((searchTerm: string) => {
-      onSearch(searchTerm);
-    }, 300),
-    [onSearch],
-  );
+  useEffect(() => {
+    const debouncedSearch = debounce(() => {
+      onSearch(query);
+    }, 500);
+
+    debouncedSearch();
+    return () => debouncedSearch.cancel();
+  }, [query, onSearch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
-    debouncedSearch(e.target.value);
   };
 
   return (
-    <input
-      type="text"
-      placeholder="Search recipes..."
-      value={query}
-      onChange={handleChange}
-    />
+    <div className="flex justify-center mb-6">
+      <input
+        type="text"
+        className="border border-gray-300 rounded-md p-2 w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Search for a recipe..."
+        value={query}
+        onChange={handleChange}
+      />
+    </div>
   );
 };
 
